@@ -1,5 +1,7 @@
+// screens/Login.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import ReusableButton from '../components/ReusableButton';  
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -30,9 +32,7 @@ const Login = ({ navigation }) => {
         onChangeText={setPassword}
         secureTextEntry
       />
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
+      <ReusableButton title="Login" onPress={handleLogin} />  
       <TouchableOpacity onPress={() => navigation.navigate('Register')}>
         <Text style={styles.link}>Don't have an account? Register</Text>
       </TouchableOpacity>
@@ -52,15 +52,6 @@ const styles = StyleSheet.create({
     padding: 10,
     color: '#4F4F4F',
   },
-  button: {
-    backgroundColor: '#F4C561',
-    padding: 15,
-    borderRadius: 5,
-    width: '100%',
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  buttonText: { color: '#FFFFFF', fontSize: 16, fontWeight: '600' },
   link: { color: '#A9A9A9', marginTop: 15, fontSize: 14 },
 });
 
