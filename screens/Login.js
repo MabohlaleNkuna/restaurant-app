@@ -1,17 +1,21 @@
 // screens/Login.js
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
-import ReusableButton from '../components/ReusableButton';  
+import ReusableButton from '../components/ReusableButton';
+import api from '../utils/Api';  
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
-    // TODO.... add backend API
-    console.log('Logging in:', { email, password });
+  const handleLogin = async () => {
+    try {
+      const response = await api.post('/auth/login', { email, password });
+      console.log('Login successful:', response.data);
+    } catch (error) {
+      console.error('Login failed:', error.response?.data || error.message);
+    }
   };
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Login</Text>

@@ -1,17 +1,27 @@
 // screens/Register.js
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
-import ReusableButton from '../components/ReusableButton';  
+import ReusableButton from '../components/ReusableButton'; 
+import api from '../utils/Api'; 
 
 const Register = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleRegister = () => {
-    // TODO.... Integrate with backend API
-    console.log('Registering:', { username, email, password });
+  const handleRegister = async () => {
+    try {
+      const response = await api.post('/auth/register', { 
+        name: username,  
+        email, 
+        password 
+      });
+      console.log('Registration successful:', response.data);
+    } catch (error) {
+      console.error('Registration failed:', error.response?.data || error.message);
+    }
   };
+  
 
   return (
     <View style={styles.container}>
