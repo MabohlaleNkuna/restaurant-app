@@ -71,7 +71,13 @@ const styles = StyleSheet.create({
     padding: 10,
     color: '#4F4F4F',
   },
-  link: { color: '#A9A9A9', marginTop: 15, fontSize: 14 },
+  link: { 
+    color: '#004AAD', 
+    marginTop: 15, 
+    fontSize: 14, 
+    textDecorationLine: 'underline', 
+  },
 });
+
 
 export default Register;
