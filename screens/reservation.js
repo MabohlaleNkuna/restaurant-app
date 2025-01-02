@@ -60,9 +60,33 @@ const ReservationScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20 },
-  label: { fontSize: 18, marginBottom: 10 },
-  input: { borderBottomWidth: 1, marginBottom: 20, fontSize: 16 },
-});
+    container: {
+      flex: 1,
+      padding: 20,
+      justifyContent: 'center',
+      backgroundColor: '#fff',
+    },
+    header: {
+      fontSize: 30,
+      fontWeight: 'bold',
+      color: '#ff6347',
+      marginBottom: 20,
+    },
+    subHeader: {
+      fontSize: 18,
+      marginBottom: 30,
+      color: '#555',
+    },
+    input: {
+      height: 50,
+      borderColor: '#ddd',
+      borderWidth: 1,
+      marginBottom: 15,
+      paddingLeft: 15,
+      borderRadius: 10,
+      fontSize: 16,
+    },
+  });
+  
 
 export default ReservationScreen;

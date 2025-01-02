@@ -19,7 +19,7 @@ const Login = ({ navigation }) => {
       console.log('Login successful:', response.data);
       
       // Navigate to ReservationScreen on successful login
-      navigation.navigate('ManageReservations'); 
+      navigation.navigate('Home'); 
     } catch (error) {
       // Extract meaningful error information
       if (error.response) {
