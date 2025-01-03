@@ -7,9 +7,15 @@ const AdminDashboardScreen = ({ navigation }) => {
       <Text style={styles.title}>Admin Dashboard</Text>
       <TouchableOpacity 
         style={styles.button}
-        onPress={() => navigation.navigate('AddRestaurantScreen')}
+        onPress={() => navigation.navigate('AddRestaurant')}
       >
         <Text style={styles.buttonText}>Add Restaurant</Text>
+      </TouchableOpacity>
+      <TouchableOpacity 
+        style={styles.button}
+        onPress={() => navigation.navigate('ManageRestaurants')}
+      >
+        <Text style={styles.buttonText}>Manage Restaurants</Text>
       </TouchableOpacity>
     </View>
   );
@@ -33,10 +39,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
+    marginVertical: 10,
   },
   buttonText: {
     fontSize: 16,
