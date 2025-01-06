@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
-import api from '../api'; 
+import api from '../../utils/Api'; 
 
 const ManageRestaurantsScreen = () => {
   const [restaurants, setRestaurants] = useState([]);

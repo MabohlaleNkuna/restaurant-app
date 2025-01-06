@@ -7,7 +7,7 @@ const AdminDashboardScreen = ({ navigation }) => {
       <Text style={styles.title}>Admin Dashboard</Text>
       <TouchableOpacity 
         style={styles.button}
-        onPress={() => navigation.navigate('AddRestaurantScreen')}
+        onPress={() => navigation.navigate('AddRestaurant')}
       >
         <Text style={styles.buttonText}>Add Restaurant</Text>
       </TouchableOpacity>
