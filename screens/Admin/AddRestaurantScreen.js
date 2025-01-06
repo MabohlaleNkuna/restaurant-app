@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert, Image, ScrollView } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert, Image } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 
 const AddRestaurantScreen = ({ navigation }) => {
@@ -7,30 +7,41 @@ const AddRestaurantScreen = ({ navigation }) => {
   const [location, setLocation] = useState('');
   const [cuisine, setCuisine] = useState('');
   const [availableSlots, setAvailableSlots] = useState('');
-  const [imageUri, setImageUri] = useState(null); 
+  const [imageUri, setImageUri] = useState(null);
 
   const handleSelectImage = () => {
     launchImageLibrary(
-      { mediaType: 'photo', maxWidth: 800, maxHeight: 800, quality: 0.8 }, 
+      { mediaType: 'photo', maxWidth: 800, maxHeight: 800, quality: 0.8 },
       (response) => {
         if (response.didCancel) {
-          console.log('Image selection cancelled');
+          Alert.alert('Notice', 'Image selection cancelled.');
         } else if (response.errorCode) {
           Alert.alert('Error', 'Failed to select an image.');
         } else {
-          const uri = response.assets[0]?.uri;
-          setImageUri(uri);
+          setImageUri(response.assets[0]?.uri);
         }
       }
     );
   };
 
   const handleAddRestaurant = async () => {
-    if (!name || !location || !cuisine || !availableSlots || !imageUri) {
-      Alert.alert('Error', 'All fields, including an image, are required.');
+    if (!name.trim()) {
+      Alert.alert('Validation Error', 'Name is required.');
       return;
     }
-  
+    if (!location.trim()) {
+      Alert.alert('Validation Error', 'Location is required.');
+      return;
+    }
+    if (!cuisine.trim()) {
+      Alert.alert('Validation Error', 'Cuisine is required.');
+      return;
+    }
+    if (!imageUri) {
+      Alert.alert('Validation Error', 'An image is required.');
+      return;
+    }
+
     try {
       const response = await fetch('http://localhost:5000/api/restaurants', {
         method: 'POST',
@@ -40,28 +51,31 @@ const AddRestaurantScreen = ({ navigation }) => {
           location,
           cuisine,
           imageUri,
-          availableSlots: availableSlots.split(',').map((slot) => new Date(slot.trim())),
+          availableSlots: availableSlots
+            .split(',')
+            .map((slot) => slot.trim())
+            .filter(Boolean),
         }),
       });
-  
+
       if (response.ok) {
         Alert.alert('Success', `Restaurant "${name}" added successfully!`);
         setName('');
         setLocation('');
         setCuisine('');
         setAvailableSlots('');
-        setImageUri(null); 
-        navigation.navigate('ManageRestaurants'); 
+        setImageUri(null);
+        navigation.navigate('ManageRestaurants');
       } else {
-        Alert.alert('Error', 'Failed to add restaurant.');
+        Alert.alert('Error', 'Failed to add the restaurant. Please try again.');
       }
-    } catch (error) {
-      Alert.alert('Error', 'Something went wrong.');
+    } catch {
+      Alert.alert('Error', 'Something went wrong. Please check your connection.');
     }
   };
-  
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.container}>
       <Text style={styles.title}>Add Restaurant</Text>
       <TextInput
         style={styles.input}
@@ -100,13 +114,13 @@ const AddRestaurantScreen = ({ navigation }) => {
       <TouchableOpacity style={styles.button} onPress={handleAddRestaurant}>
         <Text style={styles.buttonText}>Add</Text>
       </TouchableOpacity>
-    </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    flex: 1,
     backgroundColor: '#241D10',
     padding: 20,
     justifyContent: 'center',
@@ -139,12 +153,11 @@ const styles = StyleSheet.create({
     color: '#FFF',
   },
   imagePreview: {
-    width: '90%', // Adjust width to fit the container
-    height: '4pc', // Responsive height (4% of the viewport height)
+    width: '20%',
+    height: 20,
     borderRadius: 8,
     marginBottom: 15,
-    alignSelf: 'center', // Center the image in the container
-    resizeMode: 'contain', // Preserve aspect ratio
+    resizeMode: 'cover',
   },
   button: {
     backgroundColor: '#F4C561',
