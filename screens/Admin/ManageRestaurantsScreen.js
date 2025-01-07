@@ -14,18 +14,6 @@ const ManageRestaurantsScreen = ({ navigation }) => {
     }
   };
 
-  const updateRestaurantInState = (updatedRestaurant) => {
-    setRestaurants((prevRestaurants) =>
-      prevRestaurants.map((restaurant) =>
-        restaurant._id === updatedRestaurant._id ? updatedRestaurant : restaurant
-      )
-    );
-  };
-
-  useEffect(() => {
-    fetchRestaurants();
-  }, []);
-
   const handleDeleteRestaurant = async (restaurantId) => {
     try {
       const response = await fetch(`http://localhost:5000/api/restaurants/${restaurantId}`, {
@@ -45,18 +33,49 @@ const ManageRestaurantsScreen = ({ navigation }) => {
     }
   };
 
+  const handleDeleteAllRestaurants = async () => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/restaurants/all`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        setRestaurants([]);
+        Alert.alert('Success', 'All restaurants deleted successfully!');
+      } else {
+        Alert.alert('Error', 'Failed to delete all restaurants.');
+      }
+    } catch (error) {
+      console.error('Error deleting all restaurants:', error);
+      Alert.alert('Error', 'Failed to delete all restaurants.');
+    }
+  };
+
+  const updateRestaurantInState = (updatedRestaurant) => {
+    setRestaurants((prevRestaurants) =>
+      prevRestaurants.map((restaurant) =>
+        restaurant._id === updatedRestaurant._id ? updatedRestaurant : restaurant
+      )
+    );
+  };
+
+  useEffect(() => {
+    fetchRestaurants();
+  }, []);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Manage Restaurants</Text>
+      <TouchableOpacity style={styles.deleteAllButton} onPress={handleDeleteAllRestaurants}>
+        <Text style={styles.buttonText}>Delete All Restaurants</Text>
+      </TouchableOpacity>
       <FlatList
         data={restaurants}
         keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
           <View style={styles.restaurantCard}>
             <View style={styles.imageContainer}>
-              {/* Display Image if available */}
-              {item.imageUri && (
-                <Image source={{ uri: item.imageUri }} style={styles.restaurantImage} />
+              {item.image && (
+                <Image source={{ uri: `http://localhost:5000/${item.image}` }} style={styles.restaurantImage} />
               )}
               <Text style={styles.restaurantName}>{item.name}</Text>
             </View>
@@ -67,12 +86,12 @@ const ManageRestaurantsScreen = ({ navigation }) => {
                 style={styles.button}
                 onPress={() =>
                   navigation.navigate('EditRestaurant', {
-                    restaurantId: item._id,
-                    updateRestaurant: updateRestaurantInState,
+                    restaurant: item,
+                    updateRestaurantInState,
                   })
                 }
               >
-                <Text style={styles.buttonText}>Update</Text>
+                <Text style={styles.buttonText}>Edit</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.button}
@@ -89,59 +108,16 @@ const ManageRestaurantsScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#241D10',
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#F4C561',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  restaurantCard: {
-    backgroundColor: '#F4C561',
-    padding: 15,
-    borderRadius: 8,
-    marginBottom: 10,
-  },
-  imageContainer: {
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    marginBottom: 10,
-  },
-  restaurantImage: {
-    width: 60, 
-    height: 60, 
-    borderRadius: 8,
-    marginRight: 10, 
-    resizeMode: 'cover',
-  },
-  restaurantName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#241D10',
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 10,
-  },
-  button: {
-    backgroundColor: '#241D10',
-    padding: 10,
-    borderRadius: 8,
-    flex: 1,
-    marginHorizontal: 5,
-    alignItems: 'center',
-  },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#F4C561',
-  },
+  container: { flex: 1, padding: 10 },
+  title: { fontSize: 24, fontWeight: 'bold' },
+  deleteAllButton: { marginVertical: 10, padding: 10, backgroundColor: '#f44336' },
+  buttonText: { color: 'white', textAlign: 'center' },
+  restaurantCard: { padding: 10, marginBottom: 10, backgroundColor: '#f0f0f0' },
+  imageContainer: { flexDirection: 'row', alignItems: 'center' },
+  restaurantImage: { width: 50, height: 50, borderRadius: 25, marginRight: 10 },
+  restaurantName: { fontSize: 18, fontWeight: 'bold' },
+  buttonContainer: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 },
+  button: { padding: 10, backgroundColor: '#4caf50' },
 });
 
 export default ManageRestaurantsScreen;
