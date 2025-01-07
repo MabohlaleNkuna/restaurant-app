@@ -1,3 +1,4 @@
+/*
 // screens/Register.js
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
@@ -75,3 +76,4 @@ const styles = StyleSheet.create({
 });
 
 export default Register;
+*/

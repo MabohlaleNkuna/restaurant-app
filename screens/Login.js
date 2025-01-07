@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+/*import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import ReusableButton from '../components/ReusableButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -79,4 +79,4 @@ const styles = StyleSheet.create({
   link: { color: '#A9A9A9', marginTop: 15, fontSize: 14 },
 });
 
-export default Login;
+export default Login;*/
