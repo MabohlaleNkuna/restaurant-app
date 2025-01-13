@@ -24,55 +24,60 @@ const AddRestaurantScreen = ({ navigation }) => {
     );
   };
 
+  const validateInputs = () => {
+    if (!name || !location || !cuisine || !availableSlots) {
+      Alert.alert('Validation Error', 'All fields are required.');
+      return false;
+    }
+    const slotsArray = availableSlots.split(',').map((slot) => slot.trim());
+    if (!slotsArray.every((slot) => !isNaN(Date.parse(slot)))) {
+      Alert.alert('Validation Error', 'Available slots must be valid dates.');
+      return false;
+    }
+    return true;
+  };
+
   const handleAddRestaurant = async () => {
-    if (!name.trim()) {
-      Alert.alert('Validation Error', 'Name is required.');
-      return;
-    }
-    if (!location.trim()) {
-      Alert.alert('Validation Error', 'Location is required.');
-      return;
-    }
-    if (!cuisine.trim()) {
-      Alert.alert('Validation Error', 'Cuisine is required.');
-      return;
-    }
-    if (!imageUri) {
-      Alert.alert('Validation Error', 'An image is required.');
-      return;
-    }
-
-    try {
-      const response = await fetch('http://localhost:5000/api/restaurants', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name,
-          location,
-          cuisine,
-          imageUri,
-          availableSlots: availableSlots
-            .split(',')
-            .map((slot) => slot.trim())
-            .filter(Boolean),
-        }),
+    if (!validateInputs()) return;
+  
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('location', location);
+    formData.append('cuisine', cuisine);
+  
+    // Append each slot as a separate entry
+    const slotsArray = availableSlots.split(',').map((slot) => slot.trim());
+    slotsArray.forEach((slot) => {
+      formData.append('availableSlots', slot);
+    });
+  
+    if (imageUri) {
+      formData.append('image', {
+        uri: imageUri,
+        type: 'image/jpeg',
+        name: 'restaurant.jpg',
       });
-
+    }
+  
+    try {
+      const response = await fetch('http://192.168.0.194:5000/api/restaurants', {
+        method: 'POST',
+        body: formData,
+      });
+  
       if (response.ok) {
-        Alert.alert('Success', `Restaurant "${name}" added successfully!`);
-        setName('');
-        setLocation('');
-        setCuisine('');
-        setAvailableSlots('');
-        setImageUri(null);
-        navigation.navigate('ManageRestaurants');
+        Alert.alert('Success', 'Restaurant added successfully!');
       } else {
-        Alert.alert('Error', 'Failed to add the restaurant. Please try again.');
+        const error = await response.json();
+        console.error('Error:', error.message);
+        Alert.alert('Error', error.message);
       }
-    } catch {
-      Alert.alert('Error', 'Something went wrong. Please check your connection.');
+    } catch (err) {
+      console.error('Network Error:', err.message);
+      Alert.alert('Error', 'Network Error: ' + err.message);
     }
   };
+  
 
   return (
     <View style={styles.container}>
