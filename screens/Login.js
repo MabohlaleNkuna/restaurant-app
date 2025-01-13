@@ -1,4 +1,4 @@
-/*import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import ReusableButton from '../components/ReusableButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -19,7 +19,7 @@ const Login = ({ navigation }) => {
       console.log('Login successful:', response.data);
       
       // Navigate to ReservationScreen on successful login
-      navigation.navigate('Home'); 
+      navigation.navigate('AdminDashboard'); 
     } catch (error) {
       // Extract meaningful error information
       if (error.response) {
@@ -79,4 +79,4 @@ const styles = StyleSheet.create({
   link: { color: '#A9A9A9', marginTop: 15, fontSize: 14 },
 });
 
-export default Login;*/
+export default Login;
