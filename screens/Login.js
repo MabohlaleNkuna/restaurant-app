@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import ReusableButton from '../components/ReusableButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from '../utils/Api';
@@ -7,34 +7,39 @@ import api from '../utils/Api';
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleLogin = async () => {
+    if (!email || !password) {
+      setErrorMessage('Please enter both email and password.');
+      return;
+    }
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      setErrorMessage('Please enter a valid email address.');
+      return;
+    }
+
+    setLoading(true);
+    setErrorMessage('');
     try {
       const response = await api.post('/auth/login', { email, password });
       const token = response.data.token;
-  
-      // Save token to AsyncStorage
+
       await AsyncStorage.setItem('token', token);
-  
-      console.log('Login successful:', response.data);
-      
-      // Navigate to ReservationScreen on successful login
-      navigation.navigate('AdminDashboard'); 
+      navigation.navigate('Home');
     } catch (error) {
-      // Extract meaningful error information
+      console.error(error); // Log full error for debugging
       if (error.response) {
-        // Server responded with a status other than 200 range
-        console.error('Login failed:', error.response.data.message || error.response.data);
+        setErrorMessage(error.response.data.message || 'Login failed. Please try again.');
       } else if (error.request) {
-        // No response was received
-        console.error('No response from server:', error.request);
+        setErrorMessage('No response from server. Check your network or server.');
       } else {
-        // Error setting up the request
-        console.error('Error setting up login request:', error.message);
+        setErrorMessage('An error occurred. Please try again.');
       }
     }
+    
   };
-  
 
   return (
     <View style={styles.container}>
@@ -56,7 +61,12 @@ const Login = ({ navigation }) => {
         onChangeText={setPassword}
         secureTextEntry
       />
-      <ReusableButton title="Login" onPress={handleLogin} />
+      {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
+      {loading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        <ReusableButton title="Login" onPress={handleLogin} disabled={loading} />
+      )}
       <TouchableOpacity onPress={() => navigation.navigate('Register')}>
         <Text style={styles.link}>Don't have an account? Register</Text>
       </TouchableOpacity>
@@ -76,6 +86,7 @@ const styles = StyleSheet.create({
     padding: 10,
     color: '#4F4F4F',
   },
+  error: { color: 'red', marginBottom: 10, fontSize: 14 },
   link: { color: '#A9A9A9', marginTop: 15, fontSize: 14 },
 });
 

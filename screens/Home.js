@@ -9,11 +9,9 @@ const HomeScreen = () => {
     <ImageBackground source={require('../assets/restaurant.jpeg')} style={styles.background}>
       {/* Top Navigation Menu */}
       <View style={styles.menu}>
-        <TouchableOpacity onPress={() => navigation.navigate('AdminDashboard')}>
-          <Text style={styles.menuItem}>Admin Dashboard</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('ManageRestaurants')}>
-          <Text style={styles.menuItem}>Manage Restaurants</Text>
+        
+        <TouchableOpacity onPress={() => navigation.navigate('Reservations')}>
+          <Text style={styles.menuItem}> Reserve Table</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('ManageReservations')}>
           <Text style={styles.menuItem}>Manage Reservations</Text>
@@ -24,7 +22,7 @@ const HomeScreen = () => {
       <View style={styles.overlay}>
         <Text style={styles.restaurantName}>CodeTribe Dining</Text>
         <Text style={styles.tagline}>Fine Dining, Fine Memories</Text>
-        <Button title="Reserve a Table" onPress={() => navigation.navigate('Reservation')} color="#ff6347" />
+        <Button title="View restaurants" onPress={() => navigation.navigate('AvailableRestaurants')} color="#ff6347" />
       </View>
     </ImageBackground>
   );

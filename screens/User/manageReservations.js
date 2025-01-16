@@ -45,7 +45,7 @@ const ManageReservations = ({ navigation }) => {
           renderItem={({ item }) => (
             <ReservationCard
               reservation={item}
-              onEdit={() => navigation.navigate('Reservation', { reservationId: item._id })}
+              onEdit={() => navigation.navigate('Reservations', { reservationId: item._id })}
               onCancel={() => handleCancel(item._id)}
             />
           )}

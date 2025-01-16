@@ -4,61 +4,36 @@ import { Calendar } from 'react-native-calendars';
 import Dropdown from '../../components/Dropdown';
 import { createReservation } from '../../utils/Api';
 
-const ReservationScreen = () => {
-  const [restaurant, setRestaurant] = useState('');
+const ReservationScreen = ({ route }) => {
+  const { restaurant } = route.params; // Get selected restaurant
+  const [selectedRestaurant, setSelectedRestaurant] = useState(restaurant ? restaurant._id : '');
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [partySize, setPartySize] = useState('');
-  const [restaurants, setRestaurants] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    const fetchRestaurants = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch('/api/restaurants');
-        const data = await response.json();
-        setRestaurants(data);
-      } catch (error) {
-        console.error('Error fetching restaurants:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchRestaurants();
-  }, []);
 
   const handleReservation = async () => {
-    if (!restaurant || !date || !time || !partySize) {
+    if (!selectedRestaurant || !date || !time || !partySize) {
       alert('Please fill in all fields.');
       return;
     }
 
-    setLoading(true);
     try {
       await createReservation({
-        restaurant,
+        restaurant: selectedRestaurant,
         date,
         time,
-        partySize: parseInt(partySize),
+        partySize: parseInt(partySize, 10),
       });
       alert('Reservation created successfully!');
     } catch (error) {
       alert('Error creating reservation');
-    } finally {
-      setLoading(false);
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Select Restaurant</Text>
-      <Dropdown
-        selectedValue={restaurant}
-        onValueChange={(itemValue) => setRestaurant(itemValue)}
-        items={restaurants}
-      />
+      <Text style={styles.label}>Selected Restaurant</Text>
+      <Text style={styles.value}>{restaurant?.name || 'Select a restaurant'}</Text>
 
       <Text style={styles.label}>Choose a Date</Text>
       <Calendar
@@ -77,10 +52,11 @@ const ReservationScreen = () => {
         keyboardType="numeric"
       />
 
-      <Button title={loading ? 'Saving...' : 'Reserve'} onPress={handleReservation} disabled={loading} />
+      <Button title="Reserve" onPress={handleReservation} />
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {

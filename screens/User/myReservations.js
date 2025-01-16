@@ -6,7 +6,7 @@ const MyReservations = () => {
       const fetchReservations = async () => {
         setLoading(true);
         try {
-          const response = await api.get('/reservations/user');
+          const response = await api.get('/api/reservations/');
           setReservations(response.data);
         } catch (error) {
           console.error('Error fetching reservations:', error);
