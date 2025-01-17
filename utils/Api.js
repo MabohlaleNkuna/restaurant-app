@@ -2,9 +2,9 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const api = axios.create({
-  baseURL: 'http://10.50.85.4:5000/api',
+  baseURL: 'http://10.50.85.10:5000/api',
   headers: { 'Content-Type': 'application/json' },
-  timeout: 10000, 
+  // timeout: 10000, 
 });
 
 // Add JWT token to all requests if it exists
