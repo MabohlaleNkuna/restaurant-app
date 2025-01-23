@@ -1,22 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import { Calendar } from 'react-native-calendars';
+import { useNavigation } from '@react-navigation/native';
 import Dropdown from '../../components/Dropdown';
 import { createReservation } from '../../utils/Api';
 
 const ReservationScreen = ({ route }) => {
-  const { restaurant } = route.params; // Get selected restaurant
+  const { restaurant } = route.params; 
   const [selectedRestaurant, setSelectedRestaurant] = useState(restaurant ? restaurant._id : '');
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
+  const navigation = useNavigation();
   const [partySize, setPartySize] = useState('');
 
   const handleReservation = async () => {
     if (!selectedRestaurant || !date || !time || !partySize) {
       alert('Please fill in all fields.');
-      return;
+      return; 
     }
-
+  
     try {
       await createReservation({
         restaurant: selectedRestaurant,
@@ -24,12 +26,16 @@ const ReservationScreen = ({ route }) => {
         time,
         partySize: parseInt(partySize, 10),
       });
+  
       alert('Reservation created successfully!');
+      navigation.navigate('Checkout', { amount: 100 }); 
     } catch (error) {
-      alert('Error creating reservation');
+      console.error('Reservation error:', error.response?.data || error.message);
+      alert(error.response?.data?.error || 'Error creating reservation');
     }
+    
   };
-
+  
   return (
     <View style={styles.container}>
       <Text style={styles.label}>Selected Restaurant</Text>

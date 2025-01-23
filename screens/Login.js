@@ -23,7 +23,7 @@ const Login = ({ navigation }) => {
     setLoading(true);
     setErrorMessage('');
     try {
-      const response = await api.post('/auth/login', { email, password });
+      const response = await api.post('/users/login', { email, password });
       const token = response.data.token;
 
       await AsyncStorage.setItem('token', token);
