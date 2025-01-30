@@ -17,6 +17,9 @@ const Navbar = () => {
       <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
         <Text style={styles.menuItem}>Messages</Text>
       </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('UserProfile')}>
+        <Text style={styles.profileLink}>Go to Profile</Text>
+        </TouchableOpacity>
     </View>
   );
 };

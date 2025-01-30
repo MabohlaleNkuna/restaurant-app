@@ -10,6 +10,7 @@ import HomeScreen from './screens/Home';
 import Notifications from './screens/User/notifications';
 import CheckoutScreen from './screens/Checkout';
 import ManageReservations from './screens/User/manageReservations';
+import UserProfile from './screens/UserProfile';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createStackNavigator();
@@ -44,6 +45,7 @@ export default function App() {
           <Stack.Screen name="AvailableRestaurants" component={AvailableRestaurantsScreen} />
           <Stack.Screen name="Checkout" component={CheckoutScreen} />
           <Stack.Screen name="Notifications" component={Notifications} />
+          <Stack.Screen name="UserProfile" component={UserProfile} />
         </Stack.Navigator>
       </NavigationContainer>
     </StripeProvider>
