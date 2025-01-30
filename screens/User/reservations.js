@@ -27,7 +27,7 @@ const ReservationScreen = ({ route }) => {
         partySize: parseInt(partySize, 10),
       });
   
-      alert('Reservation created successfully!');
+      alert('Reservation created successfully, awaiting approval!');
       navigation.navigate('Checkout', { amount: 100 }); 
     } catch (error) {
       console.error('Reservation error:', error.response?.data || error.message);
