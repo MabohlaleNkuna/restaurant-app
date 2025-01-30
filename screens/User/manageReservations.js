@@ -3,6 +3,7 @@ import { View, FlatList, StyleSheet } from 'react-native';
 import { fetchReservations, cancelReservation } from '../../utils/Api';
 import LoadingIndicator from '../../components/LoadingIndicator';
 import ReservationCard from '../../components/ReservationCard';
+import Navbar from '../../components/Navigation';
 
 const ManageReservations = ({ navigation }) => {
   const [reservations, setReservations] = useState([]);
@@ -35,6 +36,9 @@ const ManageReservations = ({ navigation }) => {
   };
 
   return (
+    <>
+    <Navbar/>
+    
     <View style={styles.container}>
       {loading ? (
         <LoadingIndicator />
@@ -53,6 +57,7 @@ const ManageReservations = ({ navigation }) => {
         />
       )}
     </View>
+     </>
   );
 };
 

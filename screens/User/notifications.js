@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, FlatList, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { fetchNotifications, markNotificationAsRead } from '../../utils/Api';
+import Navbar from '../../components/Navigation';
 
 const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
@@ -28,6 +29,8 @@ const Notifications = () => {
   };
 
   return (
+    <>
+      <Navbar />
     <View style={styles.container}>
       <FlatList
         data={notifications}
@@ -39,6 +42,7 @@ const Notifications = () => {
         )}
       />
     </View>
+    </>
   );
 };
 

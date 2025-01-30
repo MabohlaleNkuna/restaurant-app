@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Button, StyleSheet, ImageBackground, FlatList, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import api from '../../utils/Api';
+import Navbar from '../../components/Navigation';
 
 const AvailableRestaurantsScreen = () => {
   const [restaurants, setRestaurants] = useState([]);
@@ -26,8 +27,9 @@ const AvailableRestaurantsScreen = () => {
 
   return (
     <ImageBackground source={require('../../assets/restaurant.jpeg')} style={styles.background}>
+      <Navbar/>
       <View style={styles.overlay}>
-        <Text style={styles.title}>Available Restaurants</Text>
+        <Text style={styles.title}></Text>
         <FlatList
           data={restaurants}
           keyExtractor={(item) => item._id}
