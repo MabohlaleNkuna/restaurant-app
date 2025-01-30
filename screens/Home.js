@@ -1,20 +1,45 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Button, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import io from 'socket.io-client';
+
+const socket = io("http://192.168.92.198:5000/api"); // Replace with your actual backend URL
 
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const [notification, setNotification] = useState(null);
+
+  useEffect(() => {
+    // Listen for new reservation notifications
+    socket.on("newReservation", (data) => {
+      setNotification(data.message);
+      setTimeout(() => setNotification(null), 5000); // Auto-hide after 5s
+    });
+
+    return () => {
+      socket.off("newReservation"); // Cleanup listener on unmount
+    };
+  }, []);
 
   return (
     <ImageBackground source={require('../assets/restaurant.jpeg')} style={styles.background}>
+      {/* Notification Banner */}
+      {notification && (
+        <View style={styles.notification}>
+          <Text style={styles.notificationText}>{notification}</Text>
+        </View>
+      )}
+
       {/* Top Navigation Menu */}
       <View style={styles.menu}>
-        
         <TouchableOpacity onPress={() => navigation.navigate('Reservations')}>
-          <Text style={styles.menuItem}> Reserve Table</Text>
+          <Text style={styles.menuItem}>Reserve Table</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('ManageReservations')}>
           <Text style={styles.menuItem}>Manage Reservations</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
+          <Text style={styles.menuItem}>Messages</Text>
         </TouchableOpacity>
       </View>
 
@@ -67,6 +92,21 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: 'white',
     marginBottom: 20,
+  },
+  notification: {
+    position: 'absolute',
+    top: 60,
+    left: '10%',
+    right: '10%',
+    backgroundColor: '#ff6347',
+    padding: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+    zIndex: 1,
+  },
+  notificationText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
 });
 

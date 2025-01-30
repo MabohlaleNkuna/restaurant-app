@@ -7,6 +7,7 @@ import AvailableRestaurantsScreen from './screens/User/availableRestaurants';
 import ReservationScreen from './screens/User/reservations';
 import { StripeProvider } from '@stripe/stripe-react-native';
 import HomeScreen from './screens/Home';
+import Notifications from './screens/User/notifications';
 import CheckoutScreen from './screens/Checkout';
 import ManageReservations from './screens/User/manageReservations';
 
@@ -28,6 +29,7 @@ export default function App() {
         <Stack.Screen name="Reservations" component={ReservationScreen} />
         <Stack.Screen name="AvailableRestaurants" component={AvailableRestaurantsScreen} />
         <Stack.Screen name="Checkout" component={CheckoutScreen} />
+        <Stack.Screen name="Notifications" component={Notifications} />
       </Stack.Navigator>
     </NavigationContainer>
     </StripeProvider>

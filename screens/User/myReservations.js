@@ -1,95 +1,97 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Button } from 'react-native';
-import api from './api';  // Your axios instance or API handler
+import { View, Text, FlatList, TouchableOpacity, Button, ActivityIndicator, Alert } from 'react-native';
+import api from './api'; 
 
 const MyReservations = ({ navigation }) => {
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchReservations = async () => {
-      setLoading(true);
-      try {
-        const response = await api.get('/api/reservations/');
-        setReservations(response.data);
-      } catch (error) {
-        console.error('Error fetching reservations:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchReservations();
   }, []);
 
+  const fetchReservations = async () => {
+    setLoading(true);
+    try {
+      const response = await api.get('/api/reservations', {
+        headers: { Authorization: `Bearer ${localStorage.getItem('userToken')}` },
+      });
+      setReservations(response.data);
+    } catch (error) {
+      console.error('Error fetching reservations:', error);
+      Alert.alert('Error', 'Failed to fetch reservations');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleCancel = async (reservationId) => {
-    try {
-      const response = await api.put(`/api/reservations/${reservationId}/cancel`);
-      if (response.status === 200) {
-        // Optimistically remove the cancelled reservation from the list
-        setReservations((prevReservations) =>
-          prevReservations.filter((reservation) => reservation._id !== reservationId)
-        );
-        alert('Reservation canceled successfully');
-      }
-    } catch (error) {
-      console.error('Error canceling reservation:', error);
-      alert('Failed to cancel reservation');
-    }
-  };
-
-  const handleApprove = async (reservationId) => {
-    try {
-      const response = await api.put(`/api/reservations/${reservationId}/approve`);
-      if (response.status === 200) {
-        setReservations((prevReservations) =>
-          prevReservations.map((reservation) =>
-            reservation._id === reservationId ? { ...reservation, status: 'Approved' } : reservation
-          )
-        );
-        alert('Reservation approved successfully');
-      }
-    } catch (error) {
-      console.error('Error approving reservation:', error);
-      alert('Failed to approve reservation');
-    }
-  };
-
-  const handleConfirm = async (reservationId) => {
-    try {
-      const response = await api.put(`/api/reservations/${reservationId}/confirm`);
-      if (response.status === 200) {
-        setReservations((prevReservations) =>
-          prevReservations.map((reservation) =>
-            reservation._id === reservationId ? { ...reservation, status: 'Confirmed' } : reservation
-          )
-        );
-        alert('Reservation confirmed successfully');
-      }
-    } catch (error) {
-      console.error('Error confirming reservation:', error);
-      alert('Failed to confirm reservation');
-    }
+    Alert.alert(
+      'Cancel Reservation',
+      'Are you sure you want to cancel this reservation?',
+      [
+        { text: 'No', style: 'cancel' },
+        {
+          text: 'Yes',
+          onPress: async () => {
+            try {
+              const response = await api.put(
+                `/api/reservations/${reservationId}`,
+                { status: 'Cancelled' },
+                { headers: { Authorization: `Bearer ${localStorage.getItem('userToken')}` } }
+              );
+              if (response.status === 200) {
+                setReservations((prev) =>
+                  prev.map((res) =>
+                    res._id === reservationId ? { ...res, status: 'Cancelled' } : res
+                  )
+                );
+                Alert.alert('Success', 'Reservation cancelled successfully');
+              }
+            } catch (error) {
+              console.error('Error canceling reservation:', error);
+              Alert.alert('Error', 'Failed to cancel reservation');
+            }
+          },
+        },
+      ]
+    );
   };
 
   return (
     <View style={styles.container}>
-      {loading ? <Text>Loading...</Text> : (
+      <Text style={styles.header}>My Reservations</Text>
+
+      {loading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : reservations.length === 0 ? (
+        <Text>No reservations found.</Text>
+      ) : (
         <FlatList
           data={reservations}
           keyExtractor={(item) => item._id}
           renderItem={({ item }) => (
             <View style={styles.reservation}>
-              <Text>{item.restaurant.name}</Text>
-              <Text>{item.date} at {item.time}</Text>
+              <Text style={styles.restaurantName}>{item.restaurant?.name}</Text>
+              <Text>{new Date(item.date).toLocaleDateString()} at {item.time}</Text>
               <Text>Party Size: {item.partySize}</Text>
-              <Text>Status: {item.status}</Text> {/* Show reservation status */}
+              <Text>Status: <Text style={{ color: item.status === 'Cancelled' ? 'red' : 'green' }}>{item.status}</Text></Text>
 
-              
-              <TouchableOpacity onPress={() => navigation.navigate('Reservation', { reservationId: item._id })}>
-                <Text>Edit</Text>
-              </TouchableOpacity>
-              <Button title="Cancel" onPress={() => handleCancel(item._id)} />
+              <View style={styles.actions}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('Reservations', { reservationId: item._id })}
+                  style={styles.editButton}
+                >
+                  <Text style={styles.buttonText}>Edit</Text>
+                </TouchableOpacity>
+
+                <Button
+                  title="Cancel"
+                  color="red"
+                  onPress={() => handleCancel(item._id)}
+                  disabled={item.status === 'Cancelled'}
+                />
+              </View>
             </View>
           )}
         />
@@ -102,6 +104,12 @@ const styles = {
   container: {
     flex: 1,
     padding: 16,
+    backgroundColor: '#fff',
+  },
+  header: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
   reservation: {
     marginBottom: 16,
@@ -109,6 +117,24 @@ const styles = {
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 8,
+  },
+  restaurantName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  actions: {
+    marginTop: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  editButton: {
+    backgroundColor: 'blue',
+    padding: 8,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: 'white',
+    textAlign: 'center',
   },
 };
 
