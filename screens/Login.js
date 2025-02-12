@@ -29,7 +29,7 @@ const Login = ({ navigation }) => {
       await AsyncStorage.setItem('token', token);
       navigation.navigate('Home');
     } catch (error) {
-      console.error(error); // Log full error for debugging
+      console.error(error); 
       if (error.response) {
         setErrorMessage(error.response.data.message || 'Login failed. Please try again.');
       } else if (error.request) {

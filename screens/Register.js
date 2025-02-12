@@ -12,7 +12,7 @@ const Register = ({ navigation }) => {
   const handleRegister = async () => {
     try {
       const response = await api.post('/users/register', { 
-        name: username,  
+        username,  
         email, 
         password 
       });

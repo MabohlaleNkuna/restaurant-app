@@ -1,7 +1,9 @@
 // HomeScreen.js
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, ImageBackground, TouchableOpacity, ScrollView, AsyncStorage } from 'react-native';
+import { View, Text, Button, StyleSheet, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import io from 'socket.io-client';
 import Navbar from '../components/Navigation';
  
