@@ -19,6 +19,13 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
+    const clearStorageOnAppLaunch = async () => {
+      await AsyncStorage.clear();
+    };
+    clearStorageOnAppLaunch();
+  }, []);
+
+  useEffect(() => {
     // Check if there's a token stored in AsyncStorage to maintain login state
     const checkLoginStatus = async () => {
       const userToken = await AsyncStorage.getItem('token');

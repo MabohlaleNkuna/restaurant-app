@@ -31,6 +31,7 @@ const HomeScreen = () => {
     try {
       // Remove user data from AsyncStorage
       await AsyncStorage.removeItem('token');
+      await AsyncStorage.clear();
       // Navigate back to the Login screen
       navigation.navigate('Login');
     } catch (error) {

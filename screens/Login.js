@@ -37,6 +37,7 @@ const Login = ({ navigation }) => {
       } else {
         setErrorMessage('An error occurred. Please try again.');
       }
+      await AsyncStorage.clear();
     }
     
   };

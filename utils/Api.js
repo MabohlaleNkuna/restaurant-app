@@ -2,7 +2,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const api = axios.create({
-  baseURL: 'http://restaurantapp-server-1.onrender.com/api',
+  baseURL: 'https://restaurantapp-server-1.onrender.com/api',
   headers: { 'Content-Type': 'application/json' },
 });
 
@@ -21,6 +21,7 @@ api.interceptors.response.use(
   async (error) => {
     if (error.response && error.response.status === 401) {
       await AsyncStorage.removeItem('token');
+      await AsyncStorage.clear();
       console.warn('Session expired. Redirecting to login...');
       // Optionally, you can trigger a navigation to the login screen here
     }
