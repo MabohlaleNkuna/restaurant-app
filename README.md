@@ -8,6 +8,9 @@ The Restaurant Reservation App is a mobile application built with React Native t
 Backend - [https://github.com/Yolanda-landii/RestaurantApp_Server/tree/backend]
 Admin - [https://github.com/MabohlaleNkuna/restaurant-app-admin/tree/development]
 
+The admin app of the application is hosted at:
+**[Restaurant Admin Backend](https://restaurant-app-admin.netlify.app)**
+
 ## Features
 - User authentication (Login/Register)
 - Browse available restaurants
